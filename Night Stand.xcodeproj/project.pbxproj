@@ -1,0 +1,335 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5ADF35D01F7A807D000356EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADF35CF1F7A807D000356EC /* AppDelegate.swift */; };
+		5ADF35D21F7A807D000356EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADF35D11F7A807D000356EC /* ViewController.swift */; };
+		5ADF35D51F7A807D000356EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ADF35D31F7A807D000356EC /* Main.storyboard */; };
+		5ADF35D71F7A807D000356EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADF35D61F7A807D000356EC /* Assets.xcassets */; };
+		5ADF35DA1F7A807D000356EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5ADF35D81F7A807D000356EC /* LaunchScreen.storyboard */; };
+		5ADF35E61F7A82A7000356EC /* Night Stand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADF35E51F7A82A7000356EC /* Night Stand.swift */; };
+		5AFC95B31F8434D7008A47B8 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AFC95B21F8434D7008A47B8 /* Settings.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5ADF35CC1F7A807D000356EC /* Night Stand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Night Stand.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5ADF35CF1F7A807D000356EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5ADF35D11F7A807D000356EC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5ADF35D41F7A807D000356EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5ADF35D61F7A807D000356EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5ADF35D91F7A807D000356EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5ADF35DB1F7A807E000356EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5ADF35E51F7A82A7000356EC /* Night Stand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Night Stand.swift"; sourceTree = "<group>"; };
+		5AFC95B21F8434D7008A47B8 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5ADF35C91F7A807D000356EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5ADF35C31F7A807D000356EC = {
+			isa = PBXGroup;
+			children = (
+				5ADF35CE1F7A807D000356EC /* Night Stand */,
+				5ADF35CD1F7A807D000356EC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5ADF35CD1F7A807D000356EC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5ADF35CC1F7A807D000356EC /* Night Stand.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5ADF35CE1F7A807D000356EC /* Night Stand */ = {
+			isa = PBXGroup;
+			children = (
+				5ADF35CF1F7A807D000356EC /* AppDelegate.swift */,
+				5ADF35D11F7A807D000356EC /* ViewController.swift */,
+				5ADF35D31F7A807D000356EC /* Main.storyboard */,
+				5ADF35D61F7A807D000356EC /* Assets.xcassets */,
+				5ADF35D81F7A807D000356EC /* LaunchScreen.storyboard */,
+				5ADF35DB1F7A807E000356EC /* Info.plist */,
+				5ADF35E51F7A82A7000356EC /* Night Stand.swift */,
+				5AFC95B21F8434D7008A47B8 /* Settings.swift */,
+			);
+			path = "Night Stand";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5ADF35CB1F7A807D000356EC /* Night Stand */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5ADF35DE1F7A807E000356EC /* Build configuration list for PBXNativeTarget "Night Stand" */;
+			buildPhases = (
+				5ADF35C81F7A807D000356EC /* Sources */,
+				5ADF35C91F7A807D000356EC /* Frameworks */,
+				5ADF35CA1F7A807D000356EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Night Stand";
+			productName = "Night Stand";
+			productReference = 5ADF35CC1F7A807D000356EC /* Night Stand.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5ADF35C41F7A807D000356EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Hunter Forbus";
+				TargetAttributes = {
+					5ADF35CB1F7A807D000356EC = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5ADF35C71F7A807D000356EC /* Build configuration list for PBXProject "Night Stand" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5ADF35C31F7A807D000356EC;
+			productRefGroup = 5ADF35CD1F7A807D000356EC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5ADF35CB1F7A807D000356EC /* Night Stand */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5ADF35CA1F7A807D000356EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5ADF35DA1F7A807D000356EC /* LaunchScreen.storyboard in Resources */,
+				5ADF35D71F7A807D000356EC /* Assets.xcassets in Resources */,
+				5ADF35D51F7A807D000356EC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5ADF35C81F7A807D000356EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5ADF35D21F7A807D000356EC /* ViewController.swift in Sources */,
+				5ADF35E61F7A82A7000356EC /* Night Stand.swift in Sources */,
+				5AFC95B31F8434D7008A47B8 /* Settings.swift in Sources */,
+				5ADF35D01F7A807D000356EC /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5ADF35D31F7A807D000356EC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5ADF35D41F7A807D000356EC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5ADF35D81F7A807D000356EC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5ADF35D91F7A807D000356EC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5ADF35DC1F7A807E000356EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5ADF35DD1F7A807E000356EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5ADF35DF1F7A807E000356EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5PAKG7TRL3;
+				INFOPLIST_FILE = "Night Stand/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Hunter.Night-Stand";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5ADF35E01F7A807E000356EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5PAKG7TRL3;
+				INFOPLIST_FILE = "Night Stand/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Hunter.Night-Stand";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5ADF35C71F7A807D000356EC /* Build configuration list for PBXProject "Night Stand" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5ADF35DC1F7A807E000356EC /* Debug */,
+				5ADF35DD1F7A807E000356EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5ADF35DE1F7A807E000356EC /* Build configuration list for PBXNativeTarget "Night Stand" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5ADF35DF1F7A807E000356EC /* Debug */,
+				5ADF35E01F7A807E000356EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5ADF35C41F7A807D000356EC /* Project object */;
+}
