@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class Night_Stand: UIViewController, UIPopoverControllerDelegate {
 
@@ -17,13 +18,16 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     
     let calendar = Calendar.current
     var date = Date()
-    var currentLabel = 0
+    var currentLabel = 1
     
     var updateTimer = Timer()
     var posTimer = Timer()
+    var torchTimer = Timer()
     
     var settings = UserDefaults.standard
     var center = NotificationCenter.default
+    
+    var torchTap = UITapGestureRecognizer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +49,6 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         
         UIDevice.current.isBatteryMonitoringEnabled = true
         
-        if self.currentLabel != self.TimeOutputs.count - 1 {
-            self.currentLabel = self.currentLabel + 1
-        }
-        else {
-            self.currentLabel = 0
-        }
 
         for i in 0..<self.TimeOutputs.count {
             if i != self.currentLabel {
@@ -65,11 +63,15 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         UpdateTime()
         PositionTimer()
         
+        torchTap = UITapGestureRecognizer(target: self, action: #selector(TorchTap))
+        torchTap.numberOfTapsRequired = 1
+        
         LabelAnimations(duration: 0)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(DoubleTap))
         tap.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(tap)
+        
         
         
         center.addObserver(forName: NSNotification.Name(rawValue: "UpdateView"), object: nil, queue: nil, using: {
@@ -88,10 +90,6 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             self.viewDidAppear(true)
         })
         
-        let torchTap = UITapGestureRecognizer(target: self, action: #selector(TorchTap))
-        torchTap.numberOfTapsRequired = 1
-        TimeOutputs[0].addGestureRecognizer(torchTap)
-        
     }
     
     @objc func DoubleTap(){
@@ -105,7 +103,32 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     }
     
     @objc func TorchTap() {
-        print("Tap Recognized")
+        let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: nil, position: .back)
+        if settings.bool(forKey: "useFlash") == false {
+            return
+        }
+        
+        do {
+        try device?.lockForConfiguration()
+            if device?.torchMode == AVCaptureDevice.TorchMode.on {
+                device?.torchMode = .off
+                
+            }
+            else {
+                device?.torchMode = .on
+                self.torchTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: false, block: {
+                    Void in
+                    do {
+                    try device?.lockForConfiguration()
+                        device?.torchMode = .off
+                        device?.unlockForConfiguration()
+                    } catch {}
+                })
+            }
+            device?.unlockForConfiguration()
+        } catch {
+            print("Torch not able")
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -122,6 +145,12 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         print("pausing timers")
         posTimer.invalidate()
         updateTimer.invalidate()
+        let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: nil, position: .back)
+        do {
+            try device?.lockForConfiguration()
+                device?.torchMode = .off
+                device?.unlockForConfiguration()
+        } catch {}
     }
     
     override func prefersHomeIndicatorAutoHidden() -> Bool {
@@ -190,7 +219,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             (Timer) in
             self.UpdateTime()
         })
-        print("Timer Set")
+        print("Timer Set " + TimeOutputs[1].text!)
     }
     
     func PositionTimer(){
@@ -212,9 +241,11 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         for i in 0..<self.TimeOutputs.count {
             if i != self.currentLabel {
                 self.FadeToDarkness(label: self.TimeOutputs[i],duration:  duration)
+                TimeOutputs[i].removeGestureRecognizer(torchTap)
             }
             if i == self.currentLabel {
                 self.FadeToNormal(label: self.TimeOutputs[i])
+                TimeOutputs[i].addGestureRecognizer(torchTap)
             }
         }
     }
