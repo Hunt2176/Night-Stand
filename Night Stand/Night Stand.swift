@@ -98,6 +98,18 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         if !updateTimer.isValid {
             UpdateTime()
         }
+        switch settings.integer(forKey: "color") {
+        case 0:
+            TimeOutput.textColor = .white
+        case 1:
+            TimeOutput.textColor = .blue
+        case 2:
+            TimeOutput.textColor = .red
+        case 3:
+            TimeOutput.textColor = .orange
+        default:
+            TimeOutput.textColor = .white
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -177,21 +189,23 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
                 minute += ":" + String(calendar.component(.second, from: date))
             }
         }
-        if !settings.bool(forKey: "use24") {
+//        if !settings.bool(forKey: "use24") {
+//
+//            if isAM {
+//                newTime = NSMutableAttributedString(string: hour + ":" + minute)
+//                newTime.append(NSAttributedString(string: "am", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 30)]))
+//            }
+//            else {
+//                newTime = NSMutableAttributedString(string: hour + ":" + minute)
+//                newTime.append(NSAttributedString(string: "pm", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 30)]))
+//            }
+//            
+//        }
+//        else {
+//            newTime = NSMutableAttributedString(string: hour + ":" + minute)
+//        }
         
-            if isAM {
-                newTime = NSMutableAttributedString(string: hour + ":" + minute)
-                newTime.append(NSAttributedString(string: "am", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 30)]))
-            }
-            else {
-                newTime = NSMutableAttributedString(string: hour + ":" + minute)
-                newTime.append(NSAttributedString(string: "pm", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 30)]))
-            }
-            
-        }
-        else {
-            newTime = NSMutableAttributedString(string: hour + ":" + minute)
-        }
+        newTime = NSMutableAttributedString(string: hour + ":" + minute)
         
         if a && posCount >= animationDelay {
             FadeSlide(newText: newTime)

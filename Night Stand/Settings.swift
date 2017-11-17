@@ -16,6 +16,17 @@ class Settings: UITableViewController{
     @IBOutlet weak var SecondsSwitch: UISwitch!
     @IBOutlet weak var lightSwitch: UISwitch!
     
+    @IBOutlet weak var whiteLabel: UILabel!
+    @IBOutlet weak var blueLabel: UILabel!
+    @IBOutlet weak var redLabel: UILabel!
+    @IBOutlet weak var orangeLabel: UILabel!
+    
+    @IBOutlet weak var whiteCell: UITableViewCell!
+    @IBOutlet weak var blueCell: UITableViewCell!
+    @IBOutlet weak var redCell: UITableViewCell!
+    @IBOutlet weak var orangeCell: UITableViewCell!
+    
+    
     var settings = UserDefaults.standard
     var center = NotificationCenter.default
     
@@ -27,8 +38,30 @@ class Settings: UITableViewController{
         self.navigationItem.title = "Settings"
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.orange
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-        self.navigationController?.navigationBar.barTintColor = UIColor.black
+        self.navigationController?.navigationBar.backgroundColor = UIColor.black
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.barStyle = .black
+        
+        whiteLabel.textColor = .white
+        blueLabel.textColor = .blue
+        redLabel.textColor = .red
+        orangeLabel.textColor = .orange
+        
+        whiteCell.backgroundColor = .black
+        blueCell.backgroundColor = .black
+        redCell.backgroundColor = .black
+        orangeCell.backgroundColor = .black
+        
+        let white = UITapGestureRecognizer(target: self, action: #selector(whiteColor))
+        let blue = UITapGestureRecognizer(target: self, action: #selector(blueColor))
+        let red = UITapGestureRecognizer(target: self, action: #selector(redColor))
+        let orange = UITapGestureRecognizer(target: self, action: #selector(orangeColor))
+        
+        whiteCell.addGestureRecognizer(white)
+        blueCell.addGestureRecognizer(blue)
+        redCell.addGestureRecognizer(red)
+        orangeCell.addGestureRecognizer(orange)
         
         SetupKeys()
         print("Loaded")
@@ -42,6 +75,19 @@ class Settings: UITableViewController{
         HourSwitch.isOn = settings.bool(forKey: "use24")
         lightSwitch.isOn = settings.bool(forKey: "useFlash")
         SecondsSwitch.isOn = settings.bool(forKey: "useSec")
+        
+        switch settings.integer(forKey: "color"){
+        case 0:
+            whiteCell.accessoryType = .checkmark
+        case 1:
+            blueCell.accessoryType = .checkmark
+        case 2:
+            redCell.accessoryType = .checkmark
+        case 3:
+            orangeCell.accessoryType = .checkmark
+        default:
+            whiteCell.accessoryType = .checkmark
+        }
     }
 
     @objc func Dismiss(){
@@ -60,6 +106,37 @@ class Settings: UITableViewController{
         return .fade
     }
     
+    @objc func whiteColor() {
+        whiteCell.accessoryType = .checkmark
+        blueCell.accessoryType = .none
+        redCell.accessoryType = .none
+        orangeCell.accessoryType = .none
+        settings.set(0, forKey: "color")
+    }
+    
+    @objc func blueColor() {
+        whiteCell.accessoryType = .none
+        blueCell.accessoryType = .checkmark
+        redCell.accessoryType = .none
+        orangeCell.accessoryType = .none
+        settings.set(1, forKey: "color")
+    }
+    
+    @objc func redColor() {
+        whiteCell.accessoryType = .none
+        blueCell.accessoryType = .none
+        redCell.accessoryType = .checkmark
+        orangeCell.accessoryType = .none
+        settings.set(2, forKey: "color")
+    }
+    
+    @objc func orangeColor() {
+        whiteCell.accessoryType = .none
+        blueCell.accessoryType = .none
+        redCell.accessoryType = .none
+        orangeCell.accessoryType = .checkmark
+        settings.set(3, forKey: "color")
+    }
     
     @IBAction func HourSwitch(_ sender: Any) {
         settings.set(HourSwitch.isOn, forKey: "use24")
@@ -70,6 +147,8 @@ class Settings: UITableViewController{
     @IBAction func lightSwitch(_ sender: Any) {
         settings.set(lightSwitch.isOn, forKey: "useFlash")
     }
+    
+    
     
 }
 
