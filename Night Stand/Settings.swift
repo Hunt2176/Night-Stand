@@ -13,6 +13,7 @@ class Settings: UITableViewController{
     @IBOutlet var tableview: UITableView!
     
     @IBOutlet weak var HourSwitch: UISwitch!
+    @IBOutlet weak var SecondsSwitch: UISwitch!
     @IBOutlet weak var lightSwitch: UISwitch!
     
     var settings = UserDefaults.standard
@@ -21,7 +22,7 @@ class Settings: UITableViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-    self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector (Dismiss)), animated: true)
+        self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector (Dismiss)), animated: true)
         
         self.navigationItem.title = "Settings"
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.orange
@@ -34,16 +35,13 @@ class Settings: UITableViewController{
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("Now you see me")
-        
         self.setNeedsStatusBarAppearanceUpdate()
-        
-        
     }
     
     func SetupKeys(){
         HourSwitch.isOn = settings.bool(forKey: "use24")
         lightSwitch.isOn = settings.bool(forKey: "useFlash")
+        SecondsSwitch.isOn = settings.bool(forKey: "useSec")
     }
 
     @objc func Dismiss(){
@@ -51,7 +49,6 @@ class Settings: UITableViewController{
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        
         return .lightContent
     }
     
@@ -66,7 +63,9 @@ class Settings: UITableViewController{
     
     @IBAction func HourSwitch(_ sender: Any) {
         settings.set(HourSwitch.isOn, forKey: "use24")
-        center.post(name: NSNotification.Name(rawValue: "UpdateView"), object: nil)
+    }
+    @IBAction func SecondsSwitch(_ sender: Any) {
+        settings.set(SecondsSwitch.isOn, forKey: "useSec")
     }
     @IBAction func lightSwitch(_ sender: Any) {
         settings.set(lightSwitch.isOn, forKey: "useFlash")

@@ -12,16 +12,20 @@ import AVFoundation
 class Night_Stand: UIViewController, UIPopoverControllerDelegate {
 
     
-    @IBOutlet var TimeOutputs: [UILabel]!
+    
+    @IBOutlet weak var TimeOutput: UILabel!
     @IBOutlet weak var FirstLaunch: UILabel!
     
+    var vDirection : slideway = .up
+    var hDirection : slideway = .left
+    
+    var posCount = 0
     
     let calendar = Calendar.current
     var date = Date()
     var currentLabel = 1
     
     var updateTimer = Timer()
-    var posTimer = Timer()
     var torchTimer = Timer()
     
     var settings = UserDefaults.standard
@@ -32,64 +36,22 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if settings.bool(forKey: "firstlaunch") == false {
-            settings.set(false, forKey: "firstlaunch")
-            _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: {
-                (Timer) in
-                
-                self.ToHide()
-                
-            })
-        }
-        else {
-            FirstLaunch.isHidden = true
-        }
-    
-        print(settings.bool(forKey: "firstlaunch"))
-        
-        UIDevice.current.isBatteryMonitoringEnabled = true
-        
-
-        for i in 0..<self.TimeOutputs.count {
-            if i != self.currentLabel {
-                self.TimeOutputs[i].alpha = 0
-            }
-            if i == self.currentLabel {
-                self.TimeOutputs[i].alpha = 1
-            }
-        }
+        ToHide()
         
         UIApplication.shared.isIdleTimerDisabled = true
         UpdateTime()
-        PositionTimer()
+        
+        
         
         torchTap = UITapGestureRecognizer(target: self, action: #selector(TorchTap))
         torchTap.numberOfTapsRequired = 1
         
-        LabelAnimations(duration: 0)
+        TimeOutput.isUserInteractionEnabled = true
+        TimeOutput.addGestureRecognizer(torchTap)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(DoubleTap))
         tap.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(tap)
-        
-        
-        
-        center.addObserver(forName: NSNotification.Name(rawValue: "UpdateView"), object: nil, queue: nil, using: {
-            _ in
-            print("Notification Received for View Update")
-            self.UpdateTime()
-        })
-        
-        center.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil, using: {
-            _ in
-            self.viewDidDisappear(true)
-        })
-        
-        center.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: nil, using: {
-            _ in
-            self.viewDidAppear(true)
-        })
-        
     }
     
     @objc func DoubleTap(){
@@ -112,7 +74,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         try device?.lockForConfiguration()
             if device?.torchMode == AVCaptureDevice.TorchMode.on {
                 device?.torchMode = .off
-                
+                self.torchTimer.invalidate()
             }
             else {
                 device?.torchMode = .on
@@ -123,6 +85,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
                         device?.torchMode = .off
                         device?.unlockForConfiguration()
                     } catch {}
+                    self.torchTimer.invalidate()
                 })
             }
             device?.unlockForConfiguration()
@@ -131,26 +94,22 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if !updateTimer.isValid {
             UpdateTime()
         }
-        if !posTimer.isValid {
-            print("Resuming position")
-            PositionTimer()
-        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        TimeOutput.removeConstraints(TimeOutput.constraints)
+        TimeOutput.translatesAutoresizingMaskIntoConstraints = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         print("pausing timers")
-        posTimer.invalidate()
         updateTimer.invalidate()
-        let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: nil, position: .back)
-        do {
-            try device?.lockForConfiguration()
-                device?.torchMode = .off
-                device?.unlockForConfiguration()
-        } catch {}
+        torchTimer.invalidate()
+        torchTimer.fire()
     }
     
     override func prefersHomeIndicatorAutoHidden() -> Bool {
@@ -162,12 +121,31 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         return true
     }
     
-    func UpdateTime(){
-        date = Date()
+    func SetTimer(){
+        if !settings.bool(forKey: "useSec"){
+            updateTimer = Timer.scheduledTimer(withTimeInterval: (TimeInterval(60 - (calendar.component(.second, from: date)))), repeats: false, block: {
+                (Timer) in
+                self.UpdateTime(willNeedAnim: true, animationDelay: 2)
+            })
+        }
+        else {
+            updateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {
+            void in
+            self.UpdateTime(willNeedAnim: true, animationDelay: 120)
+            })
+        }
+        print("Timer Set " + TimeOutput.text!)
+    }
+    
+    func UpdateTime(willNeedAnim a : Bool = false, animationDelay: Int = -1){
+        self.date = Date()
+        
         var hour = ""
         var minute = ""
         var newTime : NSMutableAttributedString
         var isAM = false
+        
+        posCount += 1
         
         if calendar.component(.hour, from: date) > 12 {
             if settings.bool(forKey: "use24"){
@@ -191,6 +169,14 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             minute = String(calendar.component(.minute, from: date))
         }
         
+        if settings.bool(forKey: "useSec"){
+            if calendar.component(.second, from: date) < 10 {
+                minute += ":" + "0" + String(calendar.component(.second, from: date))
+            }
+            else {
+                minute += ":" + String(calendar.component(.second, from: date))
+            }
+        }
         if !settings.bool(forKey: "use24") {
         
             if isAM {
@@ -207,64 +193,144 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             newTime = NSMutableAttributedString(string: hour + ":" + minute)
         }
         
-        for i in TimeOutputs{
-            self.UpdateLabel(label: i, new: newTime)
+        if a && posCount >= animationDelay {
+            FadeSlide(newText: newTime)
+            posCount = 0
         }
-        
+        else {
+            TimeOutput.attributedText = newTime
+        }
         SetTimer()
     }
     
-    func SetTimer(){
-        updateTimer = Timer.scheduledTimer(withTimeInterval: (TimeInterval(60 - (calendar.component(.second, from: date)))), repeats: false, block: {
-            (Timer) in
-            self.UpdateTime()
-        })
-        print("Timer Set " + TimeOutputs[1].text!)
-    }
-    
-    func PositionTimer(){
-        self.posTimer = Timer.scheduledTimer(withTimeInterval: 120, repeats: true, block: {
-            (Timer) in
-            if self.currentLabel != self.TimeOutputs.count - 1 {
-                self.currentLabel = self.currentLabel + 1
-            }
-            else {
-                self.currentLabel = 0
-            }
-            self.LabelAnimations(duration: 1)
-            })
-    }
-    
-    
-    func LabelAnimations(duration:Double) {
-        
-        for i in 0..<self.TimeOutputs.count {
-            if i != self.currentLabel {
-                self.FadeToDarkness(label: self.TimeOutputs[i],duration:  duration)
-                TimeOutputs[i].removeGestureRecognizer(torchTap)
-            }
-            if i == self.currentLabel {
-                self.FadeToNormal(label: self.TimeOutputs[i])
-                TimeOutputs[i].addGestureRecognizer(torchTap)
-            }
-        }
-    }
-    
     func ToHide(){
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 1.5, options: .curveEaseOut, animations: {
             self.FirstLaunch.alpha = 0.0
             }, completion: nil)
     }
     
-    func FadeToDarkness(label:UILabel, duration:Double){
-        UIView.animate(withDuration: duration, delay: 0.3, options: .curveEaseOut, animations: {
-            label.alpha = 0.0
-        }, completion: nil)
+    func SlideBounce(){
+        var test : CGRect = TimeOutput.frame
+        
+        switch vDirection {
+        case .up:
+            test.origin.y -= 10
+            if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                
+                switch hDirection {
+                case .left:
+                    test.origin.x -= 10
+                    if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                        AnimateSlide(label: TimeOutput, newRect: test)
+                    }
+                    else{
+                        print("switching to right")
+                        hDirection = .right
+                        SlideBounce()
+                    }
+                case .right:
+                    test.origin.x += 10
+                    if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                        AnimateSlide(label: TimeOutput, newRect: test)
+                    }
+                    else{
+                        print("switching to left")
+                        hDirection = .left
+                        SlideBounce()
+                    }
+                default:
+                    return
+                }
+                
+            }
+            else {
+                print("Switching to down")
+                vDirection = .down
+                SlideBounce()
+            }
+        case .down:
+            test.origin.y += 10
+            if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                switch hDirection {
+                case .left:
+                    test.origin.x -= 10
+                    if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                        AnimateSlide(label: TimeOutput, newRect: test)
+                    }
+                    else{
+                        print("switching to right")
+                        hDirection = .right
+                        SlideBounce()
+                    }
+                case .right:
+                    test.origin.x += 10
+                    if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                        AnimateSlide(label: TimeOutput, newRect: test)
+                    }
+                    else{
+                        print("switching to left")
+                        hDirection = .left
+                        SlideBounce()
+                    }
+                default:
+                    return
+                }
+            }
+            else {
+                print("Switching to up")
+                vDirection = .up
+                SlideBounce()
+            }
+        default:
+            return
+        }
+        
     }
-    func FadeToNormal(label:UILabel){
-        UIView.animate(withDuration: 1, delay: 1.3, options: .curveEaseOut, animations: {
-            label.alpha = 1.0
-        }, completion: nil)
+    
+    func FadeSlide(newText a : NSMutableAttributedString? = nil){
+        var test : CGRect = TimeOutput.frame
+        switch vDirection {
+        case .up:
+            test.origin.y -= 70
+            if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+            }
+            else {
+                vDirection = .down
+                FadeSlide(newText: a)
+            }
+        case .down:
+            test.origin.y += 70
+            if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
+                FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+            }
+            else {
+                vDirection = .up
+                FadeSlide(newText: a)
+            }
+        default:
+            return
+        }
+    }
+    
+    func AnimateSlide(label:UILabel, newRect g: CGRect){
+        UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
+            label.frame = g
+        })
+    }
+    
+    func FadeToLocation(label:UILabel, newRect g: CGRect, newText a : NSMutableAttributedString? = nil){
+        UIView.animate(withDuration: 1, delay: 0, options: .curveEaseIn, animations: {
+            label.alpha = 0
+        }, completion: {(_ : Bool) in
+            label.frame = g
+            if a != nil {
+                label.attributedText = a
+            }
+            UIView.animate(withDuration: 1, delay: 0.5, options: .curveEaseOut, animations: {
+                label.alpha = 1
+            }, completion: nil)
+        })
     }
     func UpdateLabel(label:UILabel, new: NSAttributedString){
         UIView.animate(withDuration: 0.5, delay: 0.3, options: .curveEaseOut, animations: {
@@ -273,4 +339,11 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     }
     
 
+}
+
+enum slideway {
+    case up
+    case down
+    case left
+    case right
 }
