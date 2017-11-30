@@ -19,7 +19,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     var vDirection : slideway = .up
     var hDirection : slideway = .left
     
-    var posCount = 0
+    var clicker = Clicker(FireRate: 2, continuous: false)
     
     let calendar = Calendar.current
     var date = Date()
@@ -33,15 +33,15 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     
     var torchTap = UITapGestureRecognizer()
     
+    var animationType = 0
+    var refreshRate = 2
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ToHide()
         
-        UIApplication.shared.isIdleTimerDisabled = true
         UpdateTime()
-        
-        
         
         torchTap = UITapGestureRecognizer(target: self, action: #selector(TorchTap))
         torchTap.numberOfTapsRequired = 1
@@ -107,14 +107,40 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             TimeOutput.textColor = .red
         case 3:
             TimeOutput.textColor = .orange
+        case 4:
+            TimeOutput.textColor = .green
+        case 5:
+            if settings.array(forKey: "customColor") != nil {
+                let custom : [CGFloat] = settings.array(forKey: "customColor") as! [CGFloat]
+                TimeOutput.textColor = UIColor(red: CGFloat(custom[0]/255), green: CGFloat(custom[1]/255), blue: CGFloat(custom[2]/255), alpha: 1)
+            }
+            else {
+                TimeOutput.textColor = .white
+            }
         default:
             TimeOutput.textColor = .white
         }
+        
+        if settings.bool(forKey: "useSec"){
+            clicker.fireAt = 60*refreshRate
+        }
+        else {
+            clicker.fireAt = refreshRate
+        }
+        
+        if settings.integer(forKey: "animationType") != nil {
+            animationType = settings.integer(forKey: "animationType")
+        }
+        else {
+            animationType = 0
+        }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         TimeOutput.removeConstraints(TimeOutput.constraints)
         TimeOutput.translatesAutoresizingMaskIntoConstraints = true
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -122,6 +148,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         updateTimer.invalidate()
         torchTimer.invalidate()
         torchTimer.fire()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     override func prefersHomeIndicatorAutoHidden() -> Bool {
@@ -137,27 +164,25 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         if !settings.bool(forKey: "useSec"){
             updateTimer = Timer.scheduledTimer(withTimeInterval: (TimeInterval(60 - (calendar.component(.second, from: date)))), repeats: false, block: {
                 (Timer) in
-                self.UpdateTime(willNeedAnim: true, animationDelay: 2)
+                self.UpdateTime(willNeedAnim: true)
             })
         }
         else {
             updateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: {
             void in
-            self.UpdateTime(willNeedAnim: true, animationDelay: 120)
+            self.UpdateTime(willNeedAnim: true)
             })
         }
         print("Timer Set " + TimeOutput.text!)
     }
     
-    func UpdateTime(willNeedAnim a : Bool = false, animationDelay: Int = -1){
+    func UpdateTime(willNeedAnim a : Bool = false){
         self.date = Date()
         
         var hour = ""
         var minute = ""
         var newTime : NSMutableAttributedString
         var isAM = false
-        
-        posCount += 1
         
         if calendar.component(.hour, from: date) > 12 {
             if settings.bool(forKey: "use24"){
@@ -167,12 +192,15 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
                 hour = String(calendar.component(.hour, from: date) - 12)
             }
         }
-        else {
-            if calendar.component(.hour, from: date) < 12 {
-                isAM = true
-            }
+        else if calendar.component(.hour, from: date) <= 12 && calendar.component(.hour, from: date) != 0 {
+            isAM = true
             hour = String(calendar.component(.hour, from: date))
         }
+        else if calendar.component(.hour, from: date) == 0 {
+            hour = String(calendar.component(.hour, from: date) + 12)
+        }
+            
+        
         
         if calendar.component(.minute, from: date) < 10 {
             minute = "0" + String(calendar.component(.minute, from: date))
@@ -199,7 +227,7 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
 //                newTime = NSMutableAttributedString(string: hour + ":" + minute)
 //                newTime.append(NSAttributedString(string: "pm", attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 30)]))
 //            }
-//            
+//
 //        }
 //        else {
 //            newTime = NSMutableAttributedString(string: hour + ":" + minute)
@@ -207,9 +235,13 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         
         newTime = NSMutableAttributedString(string: hour + ":" + minute)
         
-        if a && posCount >= animationDelay {
-            FadeSlide(newText: newTime)
-            posCount = 0
+        if a {
+            if clicker.click() {
+                FadeSlide(newText: newTime)
+            }
+            else {
+                TimeOutput.attributedText = newTime
+            }
         }
         else {
             TimeOutput.attributedText = newTime
@@ -303,11 +335,20 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
     
     func FadeSlide(newText a : NSMutableAttributedString? = nil){
         var test : CGRect = TimeOutput.frame
+
         switch vDirection {
         case .up:
             test.origin.y -= 70
             if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
-                FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                switch animationType {
+                case 0:
+                    FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                case 1:
+                    SlideToLocation(label: TimeOutput, newRect: test, newText: a)
+                default:
+                    FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                }
+                
             }
             else {
                 vDirection = .down
@@ -316,7 +357,14 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
         case .down:
             test.origin.y += 70
             if self.view.safeAreaLayoutGuide.layoutFrame.contains(test){
-                FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                switch animationType {
+                case 0:
+                    FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                case 1:
+                    SlideToLocation(label: TimeOutput, newRect: test, newText: a)
+                default:
+                    FadeToLocation(label: TimeOutput, newRect: test, newText: a)
+                }
             }
             else {
                 vDirection = .up
@@ -346,6 +394,14 @@ class Night_Stand: UIViewController, UIPopoverControllerDelegate {
             }, completion: nil)
         })
     }
+    
+    func SlideToLocation(label:UILabel, newRect g: CGRect, newText a : NSMutableAttributedString? = nil){
+        UIView.animate(withDuration: 1, delay: 0, options: .curveEaseIn, animations: {
+            label.frame = g
+            label.attributedText = a
+        }, completion: nil)
+    }
+    
     func UpdateLabel(label:UILabel, new: NSAttributedString){
         UIView.animate(withDuration: 0.5, delay: 0.3, options: .curveEaseOut, animations: {
             label.attributedText = new
